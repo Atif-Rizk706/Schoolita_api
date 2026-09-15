@@ -3,20 +3,33 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Booking;
+use App\Http\Resources\ContactMessageResource;
+use App\Http\Resources\EducationalStageResource;
+use App\Http\Resources\SubjectResource;
+use App\Http\Resources\SubjectTeacherResource;
+use App\Http\Resources\SubscriptionResource;
+use App\Http\Resources\TeacherResource;
+use App\Http\Resources\TenantResource;
+use App\Http\Resources\TestimonialResource;
+use App\Http\Resources\UnitResource;
 use App\Models\ContactMessage;
 use App\Models\EducationalStage;
 use App\Models\Grade;
-use App\Models\Package;
 use App\Models\Subject;
+use App\Models\SubjectTeacher;
+use App\Models\Subscription;
 use App\Models\Teacher;
 use App\Models\Testimonial;
+use App\Models\Unit;
 use App\Services\TenantManager;
+use App\Traits\ApiResponseTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class PublicPortalController extends Controller
 {
+    use ApiResponseTrait;
+
     public function __construct(protected TenantManager $tenantManager)
     {
     }
@@ -29,10 +42,7 @@ class PublicPortalController extends Controller
         $tenant = $this->tenantManager->getTenant();
 
         if (!$tenant) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Center/Tenant not found.'
-            ], 404);
+            return $this->notFoundResponse('Center/Tenant not found.');
         }
 
         $stages = EducationalStage::with(['grades' => function ($q) {
@@ -44,50 +54,19 @@ class PublicPortalController extends Controller
             ->take(8)
             ->get();
 
-        $featuredTeachers = Teacher::with(['subjects.grade'])
+        $featuredTeachers = Teacher::with(['subjects.grade', 'features'])
             ->where('is_active', true)
             ->take(8)
             ->get();
 
         $testimonials = Testimonial::where('is_active', true)->get();
 
-        $packages = Package::with('features')
-            ->where('is_active', true)
-            ->take(4)
-            ->get();
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'tenant' => [
-                    'id' => $tenant->id,
-                    'name' => $tenant->name,
-                    'slug' => $tenant->slug,
-                    'logo' => $tenant->logo,
-                    'cover_image' => $tenant->cover_image,
-                    'primary_color' => $tenant->primary_color,
-                    'secondary_color' => $tenant->secondary_color,
-                    'phone' => $tenant->phone,
-                    'whatsapp' => $tenant->whatsapp,
-                    'email' => $tenant->email,
-                    'address' => $tenant->address,
-                    'working_hours' => $tenant->working_hours,
-                    'social_links' => $tenant->social_links,
-                    'hero_title' => $tenant->hero_title,
-                    'hero_subtitle' => $tenant->hero_subtitle,
-                    'stats' => $tenant->stats ?: [
-                        'students_count' => '+15,000',
-                        'subjects_count' => '+12',
-                        'teachers_count' => '+50',
-                        'satisfaction_rate' => '99%',
-                    ],
-                ],
-                'stages' => $stages,
-                'featured_subjects' => $featuredSubjects,
-                'featured_teachers' => $featuredTeachers,
-                'packages' => $packages,
-                'testimonials' => $testimonials,
-            ]
+        return $this->successResponse([
+            'tenant'            => new TenantResource($tenant),
+            'stages'            => EducationalStageResource::collection($stages),
+            'featured_subjects' => SubjectResource::collection($featuredSubjects),
+            'featured_teachers' => TeacherResource::collection($featuredTeachers),
+            'testimonials'      => TestimonialResource::collection($testimonials),
         ]);
     }
 
@@ -100,10 +79,7 @@ class PublicPortalController extends Controller
             $q->where('is_active', true)->withCount('subjects');
         }])->where('is_active', true)->get();
 
-        return response()->json([
-            'success' => true,
-            'data' => $stages
-        ]);
+        return $this->successResponse(EducationalStageResource::collection($stages));
     }
 
     /**
@@ -134,10 +110,7 @@ class PublicPortalController extends Controller
 
         $subjects = $query->paginate($request->input('per_page', 12));
 
-        return response()->json([
-            'success' => true,
-            'data' => $subjects
-        ]);
+        return $this->successResponse(SubjectResource::collection($subjects));
     }
 
     /**
@@ -145,14 +118,11 @@ class PublicPortalController extends Controller
      */
     public function subjectDetail($id): JsonResponse
     {
-        $subject = Subject::with(['grade.stage', 'teachers', 'packages.features'])
+        $subject = Subject::with(['grade.stage', 'teachers'])
             ->where('is_active', true)
             ->findOrFail($id);
 
-        return response()->json([
-            'success' => true,
-            'data' => $subject
-        ]);
+        return $this->successResponse(new SubjectResource($subject));
     }
 
     /**
@@ -160,7 +130,7 @@ class PublicPortalController extends Controller
      */
     public function teachers(Request $request): JsonResponse
     {
-        $query = Teacher::with(['subjects.grade.stage'])
+        $query = Teacher::with(['subjects.grade.stage', 'features'])
             ->where('is_active', true);
 
         if ($request->filled('subject_id')) {
@@ -186,10 +156,7 @@ class PublicPortalController extends Controller
 
         $teachers = $query->paginate($request->input('per_page', 12));
 
-        return response()->json([
-            'success' => true,
-            'data' => $teachers
-        ]);
+        return $this->successResponse(TeacherResource::collection($teachers));
     }
 
     /**
@@ -197,48 +164,17 @@ class PublicPortalController extends Controller
      */
     public function teacherDetail($id): JsonResponse
     {
-        $teacher = Teacher::with(['subjects.grade.stage'])
+        $teacher = Teacher::with(['subjects.grade.stage', 'features'])
             ->where('is_active', true)
             ->findOrFail($id);
 
-        return response()->json([
-            'success' => true,
-            'data' => $teacher
-        ]);
+        return $this->successResponse(new TeacherResource($teacher));
     }
 
     /**
-     * Get packages list.
+     * Get data formatted specifically for the Subscription Wizard.
      */
-    public function packages(Request $request): JsonResponse
-    {
-        $query = Package::with(['features', 'subject', 'grade'])
-            ->where('is_active', true);
-
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
-        }
-
-        if ($request->filled('grade_id')) {
-            $query->where('grade_id', $request->grade_id);
-        }
-
-        if ($request->filled('subject_id')) {
-            $query->where('subject_id', $request->subject_id);
-        }
-
-        $packages = $query->get();
-
-        return response()->json([
-            'success' => true,
-            'data' => $packages
-        ]);
-    }
-
-    /**
-     * Get data formatted specifically for the 3-step Booking Wizard.
-     */
-    public function bookingData(): JsonResponse
+    public function subscriptionData(): JsonResponse
     {
         $subjects = Subject::with(['teachers' => function ($q) {
             $q->where('is_active', true);
@@ -246,42 +182,40 @@ class PublicPortalController extends Controller
             ->where('is_active', true)
             ->get();
 
-        $packages = Package::with('features')
-            ->where('is_active', true)
-            ->get();
-
-        return response()->json([
-            'success' => true,
-            'data' => [
-                'subjects' => $subjects,
-                'packages' => $packages,
-            ]
+        return $this->successResponse([
+            'subjects' => SubjectResource::collection($subjects),
         ]);
     }
 
     /**
-     * Store new student booking from the wizard.
+     * Store new student subscription from public wizard or portal.
      */
-    public function storeBooking(Request $request): JsonResponse
+    public function storeSubscription(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'subject_id' => 'required|exists:subjects,id',
-            'teacher_id' => 'required|exists:teachers,id',
-            'package_id' => 'required|exists:packages,id',
-            'student_name' => 'required|string|max:150',
-            'student_phone' => 'required|string|max:30',
-            'parent_phone' => 'nullable|string|max:30',
-            'email' => 'nullable|email|max:100',
-            'notes' => 'nullable|string|max:500',
+            'user_id'            => 'required|exists:users,id',
+            'subject_teacher_id' => 'required|exists:subject_teacher,id',
+            'payment_method'     => 'nullable|string|max:50',
+            'notes'              => 'nullable|string|max:500',
         ]);
 
-        $booking = Booking::create($validated);
+        $subjectTeacher = SubjectTeacher::with('subject')->findOrFail($validated['subject_teacher_id']);
+        $tenant = $this->tenantManager->getTenant() ?? $request->user()?->tenant;
 
-        return response()->json([
-            'success' => true,
-            'message' => 'تم تقديم طلب الحجز بنجاح! وسنتواصل معك قريباً لتأكيد المواعيد.',
-            'data' => $booking
-        ], 201);
+        $subscription = Subscription::create([
+            'tenant_id'          => $tenant?->id ?? $subjectTeacher->subject->tenant_id,
+            'user_id'            => $validated['user_id'],
+            'subject_teacher_id' => $validated['subject_teacher_id'],
+            'price'              => $subjectTeacher->subject->subscription_price ?? 0.00,
+            'payment_method'     => $validated['payment_method'] ?? 'cash',
+            'status'             => 'pending',
+            'notes'              => $validated['notes'] ?? null,
+        ]);
+
+        return $this->createdResponse(
+            new SubscriptionResource($subscription->load(['user', 'subjectTeacher.subject', 'subjectTeacher.teacher'])),
+            'تم تقديم طلب الاشتراك بنجاح! وسنتواصل معك قريباً لتأكيد الاشتراك / Subscription requested successfully'
+        );
     }
 
     /**
@@ -289,19 +223,45 @@ class PublicPortalController extends Controller
      */
     public function storeContact(Request $request): JsonResponse
     {
+        $tenant = $this->tenantManager->getTenant();
+
         $validated = $request->validate([
-            'name' => 'required|string|max:100',
-            'email' => 'required|email|max:100',
-            'phone' => 'nullable|string|max:30',
+            'name'    => 'required|string|max:100',
+            'email'   => 'required|email|max:100',
+            'phone'   => 'nullable|string|max:30',
+            'subject' => 'nullable|string|max:200',
             'message' => 'required|string|max:1000',
         ]);
 
+        $validated['tenant_id'] = $tenant?->id;
+
         $message = ContactMessage::create($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'تم إرسال رسالتك بنجاح! وسيقوم فريق الدعم بالرد عليك قريباً.',
-            'data' => $message
-        ], 201);
+        return $this->createdResponse(
+            new ContactMessageResource($message),
+            'تم إرسال رسالتك بنجاح! وسيقوم فريق الدعم بالرد عليك قريباً / Message sent successfully'
+        );
+    }
+
+    /**
+     * Get curriculum overview (units & lessons) for a subject-teacher assignment.
+     */
+    public function curriculum($subjectTeacherId): JsonResponse
+    {
+        $assignment = SubjectTeacher::with(['subject.grade.stage', 'teacher'])
+            ->findOrFail($subjectTeacherId);
+
+        $units = Unit::with(['lessons' => function ($q) {
+            $q->where('is_active', true)->orderBy('sort_order');
+        }])
+            ->where('subject_teacher_id', $subjectTeacherId)
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->get();
+
+        return $this->successResponse([
+            'assignment' => new SubjectTeacherResource($assignment),
+            'units'      => UnitResource::collection($units),
+        ]);
     }
 }

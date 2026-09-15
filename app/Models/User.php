@@ -30,6 +30,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'is_active',
         'image',
         'phone',
         'whatsapp',
@@ -38,6 +39,7 @@ class User extends Authenticatable
         'parent_whatsapp',
         'country',
         'grade_id',
+        'birth_date',
     ];
 
     /**
@@ -102,6 +104,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
+            'birth_date' => 'date',
         ];
     }
 }

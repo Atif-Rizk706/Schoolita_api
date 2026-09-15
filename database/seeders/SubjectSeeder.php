@@ -22,6 +22,7 @@ class SubjectSeeder extends Seeder
                 'icon' => 'calculator',
                 'color_theme' => 'amber',
                 'lessons_count' => 42,
+                'subscription_price' => 350.00,
                 'teacher_name' => 'أ. محمد عبد السلام',
             ],
             [
@@ -31,6 +32,7 @@ class SubjectSeeder extends Seeder
                 'icon' => 'flask-conical',
                 'color_theme' => 'teal',
                 'lessons_count' => 38,
+                'subscription_price' => 300.00,
                 'teacher_name' => 'د. أمنية محمود',
             ],
             [
@@ -40,6 +42,7 @@ class SubjectSeeder extends Seeder
                 'icon' => 'languages',
                 'color_theme' => 'blue',
                 'lessons_count' => 28,
+                'subscription_price' => 200.00,
                 'teacher_name' => 'أ. أحمد حسن',
             ],
             [
@@ -49,6 +52,7 @@ class SubjectSeeder extends Seeder
                 'icon' => 'zap',
                 'color_theme' => 'purple',
                 'lessons_count' => 45,
+                'subscription_price' => 350.00,
                 'teacher_name' => 'أ. سارة إبراهيم',
             ],
             [
@@ -58,6 +62,7 @@ class SubjectSeeder extends Seeder
                 'icon' => 'book-open',
                 'color_theme' => 'amber',
                 'lessons_count' => 30,
+                'subscription_price' => 150.00,
                 'teacher_name' => 'أ. طارق الشريف',
             ],
             [
@@ -67,6 +72,7 @@ class SubjectSeeder extends Seeder
                 'icon' => 'dna',
                 'color_theme' => 'teal',
                 'lessons_count' => 35,
+                'subscription_price' => 300.00,
                 'teacher_name' => 'د. إسلام يوسف',
             ],
             [
@@ -76,6 +82,7 @@ class SubjectSeeder extends Seeder
                 'icon' => 'globe',
                 'color_theme' => 'blue',
                 'lessons_count' => 24,
+                'subscription_price' => 180.00,
                 'teacher_name' => 'أ. رانيا فهمي',
             ],
             [
@@ -85,6 +92,7 @@ class SubjectSeeder extends Seeder
                 'icon' => 'atom',
                 'color_theme' => 'purple',
                 'lessons_count' => 20,
+                'subscription_price' => 150.00,
                 'teacher_name' => 'أ. محمود القاضي',
             ],
         ];
@@ -106,6 +114,7 @@ class SubjectSeeder extends Seeder
                         'icon' => $sData['icon'],
                         'color_theme' => $sData['color_theme'],
                         'lessons_count' => $sData['lessons_count'],
+                        'subscription_price' => $sData['subscription_price'],
                         'is_active' => true,
                     ]
                 );
@@ -116,7 +125,9 @@ class SubjectSeeder extends Seeder
                     ->first();
 
                 if ($teacher) {
-                    $subject->teachers()->syncWithoutDetaching([$teacher->id]);
+                    $subject->teachers()->syncWithoutDetaching([
+                        $teacher->id => ['is_active' => true]
+                    ]);
                 }
             }
         }

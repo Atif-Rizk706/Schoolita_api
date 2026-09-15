@@ -2,10 +2,18 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class PublicPortalTest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->seed();
+    }
     public function test_can_fetch_landing_page_data_with_tenant_header(): void
     {
         $response = $this->withHeaders([

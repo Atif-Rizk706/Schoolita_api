@@ -7,16 +7,20 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Translatable\HasTranslations;
 
 class Grade extends Model
 {
-    use HasFactory, BelongsToTenant;
+    use HasFactory, BelongsToTenant, HasTranslations;
+
+    public array $translatable = ['name'];
 
     protected $fillable = [
         'tenant_id',
         'stage_id',
         'name',
         'slug',
+        'code',
         'order',
         'is_active',
     ];
@@ -34,11 +38,6 @@ class Grade extends Model
     public function subjects(): HasMany
     {
         return $this->hasMany(Subject::class, 'grade_id');
-    }
-
-    public function packages(): HasMany
-    {
-        return $this->hasMany(Package::class, 'grade_id');
     }
 
     public function students(): HasMany

@@ -8,10 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Spatie\Translatable\HasTranslations;
 
 class Subject extends Model
 {
-    use HasFactory, BelongsToTenant;
+    use HasFactory, BelongsToTenant, HasTranslations;
+
+    public array $translatable = ['name', 'description', 'bio'];
 
     protected $fillable = [
         'tenant_id',
@@ -19,15 +23,18 @@ class Subject extends Model
         'name',
         'slug',
         'description',
+        'bio',
         'icon',
         'color_theme',
         'lessons_count',
+        'subscription_price',
         'is_active',
     ];
 
     protected $casts = [
-        'lessons_count' => 'integer',
-        'is_active' => 'boolean',
+        'lessons_count'      => 'integer',
+        'subscription_price' => 'float',
+        'is_active'          => 'boolean',
     ];
 
     public function grade(): BelongsTo
@@ -37,16 +44,33 @@ class Subject extends Model
 
     public function teachers(): BelongsToMany
     {
-        return $this->belongsToMany(Teacher::class, 'subject_teacher');
+        return $this->belongsToMany(Teacher::class, 'subject_teacher')
+            ->withPivot('id', 'is_active')
+            ->withTimestamps();
     }
 
-    public function packages(): HasMany
+    public function outcomes(): HasMany
     {
-        return $this->hasMany(Package::class, 'subject_id');
+        return $this->hasMany(SubjectOutcome::class)->orderBy('order');
     }
 
-    public function bookings(): HasMany
+    public function features(): HasMany
     {
-        return $this->hasMany(Booking::class, 'subject_id');
+        return $this->hasMany(SubjectFeature::class)->orderBy('order');
+    }
+
+    public function units(): HasMany
+    {
+        return $this->hasMany(Unit::class);
+    }
+
+    public function lessons(): HasMany
+    {
+        return $this->hasMany(Lesson::class);
+    }
+
+    public function subscriptions(): HasManyThrough
+    {
+        return $this->hasManyThrough(Subscription::class, SubjectTeacher::class, 'subject_id', 'subject_teacher_id');
     }
 }

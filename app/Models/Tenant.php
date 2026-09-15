@@ -67,14 +67,9 @@ class Tenant extends Model
         return $this->hasMany(Teacher::class);
     }
 
-    public function packages(): HasMany
+    public function subscriptions(): HasMany
     {
-        return $this->hasMany(Package::class);
-    }
-
-    public function bookings(): HasMany
-    {
-        return $this->hasMany(Booking::class);
+        return $this->hasMany(Subscription::class);
     }
 
     public function testimonials(): HasMany

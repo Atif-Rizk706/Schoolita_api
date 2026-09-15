@@ -8,16 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Spatie\Translatable\HasTranslations;
 
 class Teacher extends Model
 {
-    use HasFactory, BelongsToTenant;
+    use HasFactory, BelongsToTenant, HasTranslations;
+
+    public array $translatable = ['name', 'title', 'bio'];
 
     protected $fillable = [
         'tenant_id',
         'user_id',
         'name',
         'title',
+        'email',
+        'phone',
+        'address',
         'avatar',
         'bio',
         'experience_years',
@@ -40,13 +47,35 @@ class Teacher extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function subjects(): BelongsToMany
+    public function features(): HasMany
     {
-        return $this->belongsToMany(Subject::class, 'subject_teacher');
+        return $this->hasMany(TeacherFeature::class)->orderBy('order');
     }
 
-    public function bookings(): HasMany
+    public function subjects(): BelongsToMany
     {
-        return $this->hasMany(Booking::class);
+        return $this->belongsToMany(Subject::class, 'subject_teacher')
+            ->withPivot('id', 'is_active')
+            ->withTimestamps();
+    }
+
+    public function assignments(): HasMany
+    {
+        return $this->hasMany(SubjectTeacher::class, 'teacher_id');
+    }
+
+    public function units(): HasMany
+    {
+        return $this->hasMany(Unit::class);
+    }
+
+    public function lessons(): HasMany
+    {
+        return $this->hasMany(Lesson::class);
+    }
+
+    public function subscriptions(): HasManyThrough
+    {
+        return $this->hasManyThrough(Subscription::class, SubjectTeacher::class, 'teacher_id', 'subject_teacher_id');
     }
 }

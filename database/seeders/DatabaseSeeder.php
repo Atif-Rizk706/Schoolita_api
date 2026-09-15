@@ -17,8 +17,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             TeacherSeeder::class,
             SubjectSeeder::class,
-            PackageSeeder::class,
             TestimonialSeeder::class,
+            UnitAndLessonSeeder::class,
+            SubscriptionSeeder::class,
         ]);
     }
 }

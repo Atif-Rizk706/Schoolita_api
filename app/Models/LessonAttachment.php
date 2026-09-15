@@ -6,18 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class PackageFeature extends Model
+class LessonAttachment extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'package_id',
-        'feature_text',
-        'order',
+        'lesson_id',
+        'title',
+        'file_url',
+        'file_type',
     ];
 
-    public function package(): BelongsTo
+    public function lesson(): BelongsTo
     {
-        return $this->belongsTo(Package::class);
+        return $this->belongsTo(Lesson::class);
     }
 }
