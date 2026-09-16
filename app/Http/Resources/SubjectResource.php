@@ -21,6 +21,7 @@ class SubjectResource extends JsonResource
             'grade_id'           => $this->grade_id,
             'name'               => $this->translatable('name', $locale),
             'slug'               => $this->slug,
+            'code'               => $this->code,
             'description'        => $this->translatable('description', $locale),
             'bio'                => $this->translatable('bio', $locale),
             'icon'               => $this->icon ? (str_starts_with($this->icon, 'http') ? $this->icon : Storage::disk('public')->url($this->icon)) : null,

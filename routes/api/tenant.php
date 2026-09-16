@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Tenant\TenantSubjectController;
 use App\Http\Controllers\Api\Tenant\TenantSubscriptionController;
 use App\Http\Controllers\Api\Tenant\TenantStudentController;
 use App\Http\Controllers\Api\Tenant\TenantContactController;
+use App\Http\Controllers\Api\Tenant\TenantGroupController;
 use App\Http\Controllers\Api\Tenant\StageController;
 use App\Http\Controllers\Api\Tenant\GradeController;
 
@@ -36,7 +37,7 @@ Route::prefix('tenant')->group(function () {
 
         // Profile
         Route::get('/profile',  [TenantProfileController::class, 'show']);
-        Route::post('/profile', [TenantProfileController::class, 'update']); // POST for file uploads
+        Route::match(['post', 'put', 'patch'], '/profile', [TenantProfileController::class, 'update']);
 
         // Educational Structure
         Route::apiResource('stages', StageController::class);
@@ -55,6 +56,12 @@ Route::prefix('tenant')->group(function () {
         Route::apiResource('students',      TenantStudentController::class);
         Route::delete('students/{student}/image',         [TenantStudentController::class, 'deleteImage']);
         Route::patch('students/{student}/toggle-status',  [TenantStudentController::class, 'toggleStatus']);
+
+        // Groups
+        Route::apiResource('groups',        TenantGroupController::class);
+        Route::patch('groups/{group}/toggle-status',         [TenantGroupController::class, 'toggleStatus']);
+        Route::post('groups/{group}/students',               [TenantGroupController::class, 'addStudent']);
+        Route::delete('groups/{group}/students/{user}',      [TenantGroupController::class, 'removeStudent']);
 
         Route::apiResource('contacts',      TenantContactController::class);
     });

@@ -84,6 +84,18 @@ class User extends Authenticatable
         return $this->belongsTo(Grade::class);
     }
 
+    public function groupUsers(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(GroupUser::class);
+    }
+
+    public function groups(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Group::class, 'group_users')
+            ->withPivot('id', 'status', 'joined_at', 'notes')
+            ->withTimestamps();
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

@@ -69,9 +69,10 @@ class TenantApiTest extends TestCase
             ]);
 
         $updateResponse->assertStatus(200)
-            ->assertJsonPath('data.primary_color', '#f43f5e');
+            ->assertJsonPath('data.profile.primary_color', '#f43f5e');
 
-        $this->assertDatabaseHas('tenants', ['slug' => 'ebda3', 'primary_color' => '#f43f5e']);
+        $this->assertDatabaseHas('tenants', ['slug' => 'ebda3', 'phone' => '01234567890']);
+        $this->assertDatabaseHas('tenant_profiles', ['primary_color' => '#f43f5e']);
     }
 
     public function test_tenant_admin_can_fetch_dashboard_stats()
@@ -98,8 +99,7 @@ class TenantApiTest extends TestCase
             ->assertJsonStructure([
                 'data' => [
                     'tenant' => ['id', 'name', 'slug'],
-                    'stats' => ['students_count', 'teachers_count', 'subjects_count', 'bookings_count'],
-                    'recent_bookings',
+                    'stats' => ['students_count', 'teachers_count', 'subjects_count', 'subscriptions_count'],
                 ]
             ]);
     }

@@ -15,10 +15,20 @@ class StageAndGradeSeeder extends Seeder
 
         $stagesData = [
             [
+                'name'        => ['ar' => 'مرحلة التمهيدي (رياض الأطفال)', 'en' => 'Kindergarten Stage'],
+                'description' => ['ar' => 'مرحلة التأسيس ورياض الأطفال وتشمل مرحلتي KG1 و KG2.', 'en' => 'Early childhood foundation including KG1 and KG2.'],
+                'slug'        => 'kindergarten',
+                'order'       => 1,
+                'grades' => [
+                    ['name' => ['ar' => 'المستوى الأول رياض أطفال (KG1)',  'en' => 'KG 1'], 'slug' => 'grade-kg1', 'code' => 'KG-1', 'order' => 1],
+                    ['name' => ['ar' => 'المستوى الثاني رياض أطفال (KG2)', 'en' => 'KG 2'], 'slug' => 'grade-kg2', 'code' => 'KG-2', 'order' => 2],
+                ],
+            ],
+            [
                 'name'        => ['ar' => 'المرحلة الابتدائية',  'en' => 'Primary Stage'],
                 'description' => ['ar' => 'تغطي الصفوف الدراسية من الصف الأول الابتدائي حتى الصف السادس.', 'en' => 'Covers grades from 1st Primary to 6th Primary.'],
                 'slug'        => 'primary',
-                'order'       => 1,
+                'order'       => 2,
                 'grades' => [
                     ['name' => ['ar' => 'الصف الأول الابتدائي',   'en' => '1st Primary'],   'slug' => 'grade-1',  'code' => 'PRI-1', 'order' => 1],
                     ['name' => ['ar' => 'الصف الثاني الابتدائي',  'en' => '2nd Primary'],   'slug' => 'grade-2',  'code' => 'PRI-2', 'order' => 2],
@@ -32,7 +42,7 @@ class StageAndGradeSeeder extends Seeder
                 'name'        => ['ar' => 'المرحلة الإعدادية',   'en' => 'Preparatory Stage'],
                 'description' => ['ar' => 'تغطي الصفوف الدراسية من الصف الأول الإعدادي حتى الصف الثالث الإعدادي.', 'en' => 'Covers grades from 1st Preparatory to 3rd Preparatory.'],
                 'slug'        => 'preparatory',
-                'order'       => 2,
+                'order'       => 3,
                 'grades' => [
                     ['name' => ['ar' => 'الصف الأول الإعدادي',   'en' => '1st Preparatory'], 'slug' => 'grade-7',  'code' => 'PREP-1', 'order' => 1],
                     ['name' => ['ar' => 'الصف الثاني الإعدادي',  'en' => '2nd Preparatory'], 'slug' => 'grade-8',  'code' => 'PREP-2', 'order' => 2],
@@ -43,7 +53,7 @@ class StageAndGradeSeeder extends Seeder
                 'name'        => ['ar' => 'المرحلة الثانوية',    'en' => 'Secondary Stage'],
                 'description' => ['ar' => 'تغطي الصفوف الدراسية من الصف الأول الثانوي حتى الصف الثالث الثانوي.', 'en' => 'Covers grades from 1st Secondary to 3rd Secondary.'],
                 'slug'        => 'secondary',
-                'order'       => 3,
+                'order'       => 4,
                 'grades' => [
                     ['name' => ['ar' => 'الصف الأول الثانوي',    'en' => '1st Secondary'],  'slug' => 'grade-10', 'code' => 'SEC-1', 'order' => 1],
                     ['name' => ['ar' => 'الصف الثاني الثانوي',   'en' => '2nd Secondary'],  'slug' => 'grade-11', 'code' => 'SEC-2', 'order' => 2],

@@ -1,0 +1,1082 @@
+{
+    "info": {
+        "name": "Tenant Dashboard API",
+        "description": "API collection for the Tenant Admin Dashboard",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8000/api/v1",
+            "type": "string"
+        },
+        {
+            "key": "tenant_token",
+            "value": "your_auth_token_here",
+            "type": "string"
+        }
+    ],
+    "item": [
+        {
+            "name": "Auth (Public)",
+            "item": [
+                {
+                    "name": "Login",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            },
+                            "raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/tenant/login",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "tenant",
+                                "login"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "Register",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            },
+                            "raw": "{\n    \"name\": \"Tenant Name\",\n    \"email\": \"tenant@example.com\",\n    \"password\": \"password\",\n    \"password_confirmation\": \"password\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/tenant/register",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "tenant",
+                                "register"
+                            ]
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "name": "Protected Routes",
+            "item": [
+                {
+                    "name": "Auth & Profile",
+                    "item": [
+                        {
+                            "name": "Logout",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/logout",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "logout"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Authenticated User (Me)",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/me",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "me"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Profile",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/profile",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "profile"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update Profile",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    },
+                                    "raw": "{\n    \"name\": \"سكوليتا | منصة التعليم الذكي\",\n    \"phone\": \"+20 100 000 0000\",\n    \"whatsapp\": \"201000000000\",\n    \"email\": \"support@schoolita.com\",\n    \"primary_color\": \"#f59e0b\",\n    \"secondary_color\": \"#0d9488\",\n    \"address\": {\n        \"ar\": \"القاهرة، جمهورية مصر العربية\",\n        \"en\": \"Cairo, Egypt\"\n    },\n    \"working_hours\": {\n        \"ar\": \"من الأحد للخميس: 9 صباحاً - 6 مساءً\",\n        \"en\": \"Sun-Thu: 9 AM - 6 PM\"\n    },\n    \"about_us\": {\n        \"ar\": \"منصة سكوليتا هي منصة رائدة في التعليم التفاعلي\",\n        \"en\": \"Schoolita is a leading smart education platform\"\n    },\n    \"vision\": {\n        \"ar\": \"تمكين كل طالب من أدوات التعلم الحديثة\",\n        \"en\": \"Empowering every student with modern learning tools\"\n    },\n    \"mission\": {\n        \"ar\": \"تقديم تعليم تفاعلي عالي الجودة\",\n        \"en\": \"Delivering high quality interactive education\"\n    },\n    \"hero_title\": {\n        \"ar\": \"تعلم بذكاء ومتعة مع Schoolita\",\n        \"en\": \"Learn Smart & Enjoyably with Schoolita\"\n    },\n    \"hero_subtitle\": {\n        \"ar\": \"تجربة تعليمية تفاعلية جديدة\",\n        \"en\": \"A new interactive educational experience\"\n    },\n    \"logo\": \"FILE_UPLOAD_NOT_SUPPORTED_IN_JSON_RAW\",\n    \"cover_image\": \"FILE_UPLOAD_NOT_SUPPORTED_IN_JSON_RAW\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/profile",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "profile"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Dashboard Stats",
+                    "item": [
+                        {
+                            "name": "Get Dashboard",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/dashboard",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "dashboard"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Dashboard Stats",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/dashboard-stats",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "dashboard-stats"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Stages & Grades",
+                    "item": [
+                        {
+                            "name": "List Stages",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/stages",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "stages"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create Stage",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    },
+                                    "raw": "{\n    \"name\": \"Stage Name\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/stages",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "stages"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List Stage Grades",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/stages/1/grades",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "stages",
+                                        "1",
+                                        "grades"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Teachers",
+                    "item": [
+                        {
+                            "name": "List Teachers",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/teachers",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "teachers"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create Teacher",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    },
+                                    "raw": "{\n    \"name\": {\n        \"ar\": \"أحمد محمود\",\n        \"en\": \"Ahmed Mahmoud\"\n    },\n    \"email\": \"teacher@example.com\",\n    \"password\": \"password\",\n    \"password_confirmation\": \"password\",\n    \"phone\": \"01000000000\",\n    \"whatsapp_number\": \"01000000000\",\n    \"address\": \"القاهرة\",\n    \"title\": {\n        \"ar\": \"مدرس رياضيات\",\n        \"en\": \"Math Teacher\"\n    },\n    \"bio\": {\n        \"ar\": \"خبرة 10 سنوات في تدريس الرياضيات\",\n        \"en\": \"10 years experience in teaching Math\"\n    },\n    \"experience_years\": \"10\",\n    \"color_theme\": \"#1E3A8A\",\n    \"is_active\": \"1\",\n    \"avatar\": \"FILE_UPLOAD_NOT_SUPPORTED_IN_JSON_RAW\",\n    \"subject_ids\": [1, 2],\n    \"features\": [\n        {\"title\": {\"ar\": \"شرح مبسط\", \"en\": \"Simple explanation\"}},\n        {\"title\": {\"ar\": \"متابعة مستمرة\", \"en\": \"Continuous follow-up\"}}\n    ]\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/teachers",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "teachers"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Toggle Teacher Status",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/teachers/1/toggle-status",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "teachers",
+                                        "1",
+                                        "toggle-status"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete Teacher Avatar",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/teachers/1/avatar",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "teachers",
+                                        "1",
+                                        "avatar"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Subjects",
+                    "item": [
+                        {
+                            "name": "List Subjects",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/subjects",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "subjects"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List Subjects by Grade",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/subjects?grade_id=1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "subjects"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "grade_id",
+                                            "value": "1"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create Subject",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    },
+                                    "raw": "{\n    \"name\": \"Math\",\n    \"code\": \"SUB-MATH01\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/subjects",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "subjects"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Toggle Subject Status",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/subjects/1/toggle-status",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "subjects",
+                                        "1",
+                                        "toggle-status"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Students",
+                    "item": [
+                        {
+                            "name": "List Students",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/students",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "students"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create Student",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    },
+                                    "raw": "{\n    \"name\": \"علي محمد\",\n    \"email\": \"student@example.com\",\n    \"password\": \"password\",\n    \"password_confirmation\": \"password\",\n    \"phone\": \"01000000000\",\n    \"whatsapp\": \"01000000000\",\n    \"parent_email\": \"parent@example.com\",\n    \"parent_phone\": \"01000000001\",\n    \"parent_whatsapp\": \"01000000001\",\n    \"country\": \"Egypt\",\n    \"grade_id\": \"1\",\n    \"birth_date\": \"2010-01-01\",\n    \"is_active\": \"1\",\n    \"image\": \"FILE_UPLOAD_NOT_SUPPORTED_IN_JSON_RAW\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/students",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "students"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Toggle Student Status",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/students/1/toggle-status",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "students",
+                                        "1",
+                                        "toggle-status"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete Student Image",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/students/1/image",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "students",
+                                        "1",
+                                        "image"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Subscriptions & Contacts",
+                    "item": [
+                        {
+                            "name": "List Subscriptions",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/subscriptions",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "subscriptions"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "List Contacts",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/contacts",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "contacts"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "Groups Management",
+                    "item": [
+                        {
+                            "name": "List Groups",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/groups?search=&teacher_id=&subject_id=&grade_id=",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "groups"
+                                    ],
+                                    "query": [
+                                        {
+                                            "key": "search",
+                                            "value": ""
+                                        },
+                                        {
+                                            "key": "teacher_id",
+                                            "value": ""
+                                        },
+                                        {
+                                            "key": "subject_id",
+                                            "value": ""
+                                        },
+                                        {
+                                            "key": "grade_id",
+                                            "value": ""
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Create Group",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"teacher_id\": 1,\n  \"subject_id\": 1,\n  \"name\": \"مجموعة المتفوقين - أ\",\n  \"capacity\": 25,\n  \"price\": 350.00,\n  \"description\": \"مجموعة دراسية مكثفة تركز على الفهم العميق للرياضيات.\",\n  \"days\": [\n    {\n      \"day_of_week\": \"الأحد / Sunday\",\n      \"start_time\": \"16:00\",\n      \"end_time\": \"18:00\",\n      \"room\": \"قاعة 1\"\n    },\n    {\n      \"day_of_week\": \"الثلاثاء / Tuesday\",\n      \"start_time\": \"16:00\",\n      \"end_time\": \"18:00\",\n      \"room\": \"قاعة 1\"\n    }\n  ],\n  \"student_ids\": []\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/groups",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "groups"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Get Group Details",
+                            "request": {
+                                "method": "GET",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/groups/1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "groups",
+                                        "1"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Update Group",
+                            "request": {
+                                "method": "PUT",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"name\": \"مجموعة المتفوقين المحدثة - أ\",\n  \"capacity\": 30,\n  \"price\": 400.00,\n  \"days\": [\n    {\n      \"day_of_week\": \"الأحد / Sunday\",\n      \"start_time\": \"17:00\",\n      \"end_time\": \"19:00\",\n      \"room\": \"قاعة الأبطال\"\n    }\n  ]\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/groups/1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "groups",
+                                        "1"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Toggle Group Status",
+                            "request": {
+                                "method": "PATCH",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/groups/1/toggle-status",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "groups",
+                                        "1",
+                                        "toggle-status"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Add Student to Group",
+                            "request": {
+                                "method": "POST",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"user_id\": 2,\n  \"status\": \"active\",\n  \"notes\": \"انضمام من بداية الفصل الدراسي الأول\"\n}"
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/groups/1/students",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "groups",
+                                        "1",
+                                        "students"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Remove Student from Group",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/groups/1/students/2",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "groups",
+                                        "1",
+                                        "students",
+                                        "2"
+                                    ]
+                                }
+                            }
+                        },
+                        {
+                            "name": "Delete Group",
+                            "request": {
+                                "method": "DELETE",
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Authorization",
+                                        "value": "Bearer {{tenant_token}}"
+                                    }
+                                ],
+                                "url": {
+                                    "raw": "{{base_url}}/tenant/groups/1",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "tenant",
+                                        "groups",
+                                        "1"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

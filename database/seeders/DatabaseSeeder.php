@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             TestimonialSeeder::class,
             UnitAndLessonSeeder::class,
             SubscriptionSeeder::class,
+            GroupSeeder::class,
         ]);
     }
 }

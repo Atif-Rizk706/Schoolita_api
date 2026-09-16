@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Spatie\Translatable\HasTranslations;
+use Illuminate\Support\Str;
 
 class Subject extends Model
 {
@@ -22,6 +23,7 @@ class Subject extends Model
         'grade_id',
         'name',
         'slug',
+        'code',
         'description',
         'bio',
         'icon',
@@ -36,6 +38,24 @@ class Subject extends Model
         'subscription_price' => 'float',
         'is_active'          => 'boolean',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($subject) {
+            if (empty($subject->code)) {
+                $subject->code = self::generateUniqueCode();
+            }
+        });
+    }
+
+    private static function generateUniqueCode(): string
+    {
+        do {
+            $code = 'SUB-' . strtoupper(Str::random(6));
+        } while (self::where('code', $code)->exists());
+
+        return $code;
+    }
 
     public function grade(): BelongsTo
     {
@@ -72,5 +92,10 @@ class Subject extends Model
     public function subscriptions(): HasManyThrough
     {
         return $this->hasManyThrough(Subscription::class, SubjectTeacher::class, 'subject_id', 'subject_teacher_id');
+    }
+
+    public function groups(): HasMany
+    {
+        return $this->hasMany(Group::class);
     }
 }

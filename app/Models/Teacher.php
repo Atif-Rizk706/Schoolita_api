@@ -78,4 +78,19 @@ class Teacher extends Model
     {
         return $this->hasManyThrough(Subscription::class, SubjectTeacher::class, 'teacher_id', 'subject_teacher_id');
     }
+
+    public function groups(): HasMany
+    {
+        return $this->hasMany(Group::class);
+    }
+
+    /**
+     * Get the educational stages of the teacher through their subjects.
+     */
+    public function educationalStages()
+    {
+        return \App\Models\EducationalStage::whereHas('grades.subjects.teachers', function ($query) {
+            $query->where('teachers.id', $this->id);
+        });
+    }
 }

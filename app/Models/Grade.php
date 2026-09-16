@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Spatie\Translatable\HasTranslations;
+use Illuminate\Support\Str;
 
 class Grade extends Model
 {
@@ -29,6 +30,24 @@ class Grade extends Model
         'is_active' => 'boolean',
         'order' => 'integer',
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($grade) {
+            if (empty($grade->code)) {
+                $grade->code = self::generateUniqueCode();
+            }
+        });
+    }
+
+    private static function generateUniqueCode(): string
+    {
+        do {
+            $code = 'GRD-' . strtoupper(Str::random(6));
+        } while (self::where('code', $code)->exists());
+
+        return $code;
+    }
 
     public function stage(): BelongsTo
     {

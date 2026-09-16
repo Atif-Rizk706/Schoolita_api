@@ -47,22 +47,21 @@ class TenantProfileController extends Controller
 
         $validated = $request->validate([
             'name'            => 'sometimes|required|string|max:255',
-            'logo'            => 'nullable|image|max:2048',
-            'cover_image'     => 'nullable|image|max:4096',
+            'logo'            => 'nullable',
+            'cover_image'     => 'nullable',
             'primary_color'   => 'nullable|string|max:20',
             'secondary_color' => 'nullable|string|max:20',
             'phone'           => 'nullable|string|max:30',
             'whatsapp'        => 'nullable|string|max:30',
             'email'           => 'nullable|email|max:150',
-            'address'         => 'nullable|string|max:255',
-            'about_us'        => 'nullable|string',
-            'vision'          => 'nullable|string',
-            'mission'         => 'nullable|string',
-            'working_hours'   => 'nullable|string|max:255',
+            'address'         => 'nullable',
+            'about_us'        => 'nullable',
+            'vision'          => 'nullable',
+            'mission'         => 'nullable',
+            'working_hours'   => 'nullable',
             'social_links'    => 'nullable|array',
-            'hero_title'      => 'nullable|string|max:255',
-            'hero_subtitle'   => 'nullable|string|max:500',
-            'stats'           => 'nullable|array',
+            'hero_title'      => 'nullable',
+            'hero_subtitle'   => 'nullable',
         ]);
 
         $updatedTenant = $this->profileService->updateProfile($tenant, $validated);

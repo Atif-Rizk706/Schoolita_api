@@ -32,7 +32,6 @@ class TenantAuthController extends Controller
 
         return $this->successResponse([
             'user'       => new UserResource($result['user']),
-            'tenant'     => new TenantResource($result['tenant']),
             'token'      => $result['token'],
             'token_type' => $result['token_type'],
         ], 'تم تسجيل دخول مدير السنتر بنجاح / Logged in successfully');

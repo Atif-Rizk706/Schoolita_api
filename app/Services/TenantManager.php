@@ -99,15 +99,19 @@ class TenantManager
                 'slug' => Str::slug($validated['slug']),
                 'domain' => $validated['domain'] ?? null,
                 'phone' => $validated['phone'],
-                'whatsapp' => $validated['whatsapp'] ?? $validated['phone'],
                 'email' => $validated['email'],
+                'is_active' => true,
+                'subscription_plan' => $validated['subscription_plan'] ?? 'standard',
+            ]);
+
+            // Create Tenant Profile
+            $tenant->profile()->create([
+                'whatsapp' => $validated['whatsapp'] ?? $validated['phone'],
                 'address' => $validated['address'] ?? null,
                 'primary_color' => $validated['primary_color'] ?? '#2563eb',
                 'secondary_color' => $validated['secondary_color'] ?? '#7c3aed',
                 'hero_title' => $validated['hero_title'] ?? "مرحباً بكم في {$validated['name']}",
                 'hero_subtitle' => $validated['hero_subtitle'] ?? 'منصة التميز والتفوق الدراسي.',
-                'is_active' => true,
-                'subscription_plan' => $validated['subscription_plan'] ?? 'standard',
             ]);
 
             // 2. Create Tenant Admin User
@@ -124,7 +128,7 @@ class TenantManager
             $token = $admin->createToken('tenant_admin_token')->plainTextToken;
 
             return [
-                'tenant' => $tenant,
+                'tenant' => $tenant->load('profile'),
                 'admin' => $admin,
                 'token' => $token,
                 'token_type' => 'Bearer',
@@ -137,8 +141,7 @@ class TenantManager
      */
     public function updateProfile(Tenant $tenant, array $validated): Tenant
     {
-        $tenant->update($validated);
-        return $tenant->fresh();
+        return app(\App\Services\Tenant\TenantProfileService::class)->updateProfile($tenant, $validated);
     }
 
     /**

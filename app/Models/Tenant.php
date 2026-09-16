@@ -10,37 +10,38 @@ class Tenant extends Model
 {
     use HasFactory;
 
+    protected $with = ['profile'];
+
     protected $fillable = [
         'name',
         'slug',
         'domain',
-        'logo',
-        'cover_image',
-        'primary_color',
-        'secondary_color',
         'phone',
-        'whatsapp',
         'email',
-        'address',
-        'about_us',
-        'vision',
-        'mission',
-        'working_hours',
-        'social_links',
-        'hero_title',
-        'hero_subtitle',
-        'stats',
         'is_active',
         'subscription_plan',
         'subscription_expires_at',
     ];
 
     protected $casts = [
-        'social_links' => 'array',
-        'stats' => 'array',
         'is_active' => 'boolean',
         'subscription_expires_at' => 'datetime',
     ];
+
+    public function profile(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(TenantProfile::class);
+    }
+
+    public function getLogoAttribute(): ?string
+    {
+        return $this->profile?->logo;
+    }
+
+    public function getCoverImageAttribute(): ?string
+    {
+        return $this->profile?->cover_image;
+    }
 
     public function users(): HasMany
     {
@@ -80,5 +81,10 @@ class Tenant extends Model
     public function contactMessages(): HasMany
     {
         return $this->hasMany(ContactMessage::class);
+    }
+
+    public function groups(): HasMany
+    {
+        return $this->hasMany(Group::class);
     }
 }
